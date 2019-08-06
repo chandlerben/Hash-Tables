@@ -17,14 +17,18 @@ class LinkedPair:
 # '''
 class HashTable:
     def __init__(self, capacity):
-        pass
+        self.capacity = capacity
+        self.storage = [None] * capacity
 
 
 # '''
 # Research and implement the djb2 hash function
 # '''
 def hash(string, max):
-    pass
+    hash = 5381
+    for character in string:
+        hash = ((hash << 5) + hash) + ord(character)
+    return hash % max
 
 
 # '''
@@ -33,7 +37,15 @@ def hash(string, max):
 # Hint: Used the LL to handle collisions
 # '''
 def hash_table_insert(hash_table, key, value):
-    pass
+    new_linked_pair = LinkedPair(key, value)
+    index = hash(key, hash_table.capacity)
+    if hash_table.storage[index] is None:
+        hash_table.storage[index] = new_linked_pair
+    else:
+        i = 0
+        while hash_table.storage[index][i].next is not None:
+            i += 1
+        hash_table.storage[index][i].next = new_linked_pair
 
 
 # '''
@@ -42,7 +54,19 @@ def hash_table_insert(hash_table, key, value):
 # If you try to remove a value that isn't there, print a warning.
 # '''
 def hash_table_remove(hash_table, key):
-    pass
+    index = hash(key, hash_table.capacity)
+    if hash_table.storage[index] is None:
+        print(f'The storage for key {key} is empty')
+    elif hash_table.storage[index].key is key:
+        hash_table.storage[index] = None
+    else:
+        i = 0
+        new_i = i-1
+        while hash_table.storage[index][i].next is not None:
+            if hash_table.storage[index][i].key == key:
+                hash_table.storage[index][new_i].next = hash_table.storage[index][i].next
+                break
+            i += 1
 
 
 # '''
@@ -58,6 +82,7 @@ def hash_table_retrieve(hash_table, key):
 # Fill this in
 # '''
 def hash_table_resize(hash_table):
+    hash_table.storage = [None] * (hash_table.capacity * 2)
     pass
 
 
